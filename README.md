@@ -32,7 +32,12 @@
    - 使用以下指令進行安裝 `npm i --legacy-peer-deps`
    - 預設執行`projects/sample`
    - 需調整前端oidc設定， 請變更`projects/sample/src/app/auth-code-flow.config.ts`
-   - 預設使用以下網址操作：`http://oidc-ui:4200/home.html`
+   - 預設使用以下網址操作：[http://oidc-ui:4200/home.html](http://oidc-ui:4200/home.html)
 3. Spring-Authorization-server資訊如下
-   - `http://auth-server:8080`
+   - [http://auth-server:8080](http://auth-server:8080)
    - 帳號密碼：user/password
+3. keycloak-Authorization-server資訊如下
+   - 目前DB為h2，重啟會重新load`baeldung-realm.json`
+   - [http://auth-server:8083](http://auth-server:8083)
+   - 測試帳號密碼：user/pass
+   - [admin頁面](http://auth-server:8083/auth/)，bael-admin/pass
