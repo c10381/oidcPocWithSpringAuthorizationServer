@@ -17,12 +17,17 @@
 ## 環境說明
 - Java 17
 - Spring boot 3
-- Angular 17 with coreui
+- Angular 17
 
 ## 使用說明
-請將.host檔案新增以下資訊
+1. 請將.host檔案新增以下資訊
 ```
 127.0.0.1 auth-server
 127.0.0.1 resource-server-1
 127.0.0.1 resource-server-2
+127.0.0.1 oidc-ui
 ```
+2. 前端請使用以下指令進行安裝
+`npm i --legacy-peer-deps`
+預設會執行`projects/sample`
+3. 需調整前端oidc設定， 請變更`projects/sample/src/app/auth-code-flow.config.ts`

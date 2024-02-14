@@ -1,0 +1,275 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>angular-oauth2-oidc</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	   <link rel="stylesheet" href="./styles/style.css">
+        <link rel="stylesheet" href="./styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="./" class="navbar-brand">angular-oauth2-oidc</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<h1>Changelog</h1>
+<h3>Features</h3>
+<ul>
+<li>update project to Angular 16 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/b999024b1bb7fdb40f07810a75add60f47fe5f08">b999024</a>)</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/728">#728</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/51e438a942773948f17ab108332d704b459fd789">51e438a</a>), closes <a href="https://github.com/manfredsteyer//github.com/manfredsteyer/angular-oauth2-oidc/issues/728/issues/issuecomment-808969225">/github.com/manfredsteyer/angular-oauth2-oidc/issues/728#issuecomment-808969225</a></li>
+<li>clear location.hash only if it is present (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c2b2753943d59a6b4b5149f1003371338ac1a210">c2b2753</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/970">#970</a></li>
+<li>clock skew bug (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/f30098df4213671871cf9cd5667ca9751ff29ddd">f30098d</a>)</li>
+<li>correctly handle ? and &amp; in location replacements (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/70fd8268832aba954956542e37896252dde5cdab">70fd826</a>)</li>
+<li>correctly use clockSkew for hasValid[Access|Id]Token (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/68238fb6ea4a2f88ada97b03b13663d1454b001c">68238fb</a>)</li>
+<li>Disable nonce validation for id token for e2e tests (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/f5bd96ca81ec6b7af868de72b1098541264347cf">f5bd96c</a>)</li>
+<li>fix scope/state removal for implicit flow with hash (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/9e257d0d267942d716607f2a1c78700bd9d6e9ef">9e257d0</a>)</li>
+<li>in code flow pass options to error handler (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c9a2c557178af26154adfbcf39e3db2d12ee0503">c9a2c55</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/972">#972</a></li>
+<li>issue with sha256 and prod build <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/1120">#1120</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/b44e19a2f5c758e3b5dab259336ee1974bfe99c8">b44e19a</a>)</li>
+<li><strong>js-sha256:</strong> wrap logic in a function to prevent optimizer destroy lib (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/ae26fba258cc3effd693d23473ff51b63005b9ae">ae26fba</a>)</li>
+<li><strong>jwks:</strong> update jsrsasign dependency to 10.2.0 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/a05bd8a106035acb51fb06fd62e17de0de8decb4">a05bd8a</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/1061">#1061</a></li>
+<li>multiplying calls to token endpoint in code flow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/59f65d2eb9cd1a724301fb3de0b3def796920bd4">59f65d2</a>)</li>
+<li>Refresh tokens with a plus sign get corrupted before sending to token endpoint (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/2204c5a307640d11b847a0c266b44ca2c18fd9a7">2204c5a</a>)</li>
+<li><strong>revoketokenandlogout:</strong> &#39;customParameters&#39; should accept boolean (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/9761baded0d85bd831947de4607296fb029579ab">9761bad</a>)</li>
+<li>While Using POPUP mode, we click on login button multiple time it opens multiple popup instead of focusing already opened (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/bbff95b86173fa9262bf962e7fa4cfe4121b787e">bbff95b</a>)</li>
+</ul>
+<h2><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/v10.0.3...v10.0.2">12.0.0</a> (2021-07-16)</h2>
+<h3>Bug Fixes</h3>
+<ul>
+<li><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/728">#728</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/51e438a942773948f17ab108332d704b459fd789">51e438a</a>), closes <a href="https://github.com//github.com/manfredsteyer/angular-oauth2-oidc/issues/728/issues/issuecomment-808969225">/github.com/manfredsteyer/angular-oauth2-oidc/issues/728#issuecomment-808969225</a></li>
+<li>clear location.hash only if it is present (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c2b2753943d59a6b4b5149f1003371338ac1a210">c2b2753</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/970">#970</a></li>
+<li>correctly handle ? and &amp; in location replacements (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/70fd8268832aba954956542e37896252dde5cdab">70fd826</a>)</li>
+<li>Disable nonce validation for id token for e2e tests (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/f5bd96ca81ec6b7af868de72b1098541264347cf">f5bd96c</a>)</li>
+<li>fix scope/state removal for implicit flow with hash (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/9e257d0d267942d716607f2a1c78700bd9d6e9ef">9e257d0</a>)</li>
+<li>in code flow pass options to error handler (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c9a2c557178af26154adfbcf39e3db2d12ee0503">c9a2c55</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/972">#972</a></li>
+<li><strong>jwks:</strong> update jsrsasign dependency to 10.2.0 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/a05bd8a106035acb51fb06fd62e17de0de8decb4">a05bd8a</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/1061">#1061</a></li>
+<li>multiplying calls to token endpoint in code flow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/59f65d2eb9cd1a724301fb3de0b3def796920bd4">59f65d2</a>)</li>
+<li>Refresh tokens with a plus sign get corrupted before sending to token endpoint (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/2204c5a307640d11b847a0c266b44ca2c18fd9a7">2204c5a</a>)</li>
+<li><strong>revoketokenandlogout:</strong> &#39;customParameters&#39; should accept boolean (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/9761baded0d85bd831947de4607296fb029579ab">9761bad</a>)</li>
+<li>While Using POPUP mode, we click on login button multiple time it opens multiple popup instead of focusing already opened (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/bbff95b86173fa9262bf962e7fa4cfe4121b787e">bbff95b</a>)</li>
+</ul>
+<h3>Features</h3>
+<ul>
+<li>introduce DateTimeProvider (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/0c0a4a7a2574c8c134fa839f7ccdee06273a0676">0c0a4a7</a>)</li>
+<li><strong>logout:</strong> postLogoutRedirectUri should not default to redirectUri (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/ff7d1d915aa19f87bcb1c2d18ac3eb280db78d3b">ff7d1d9</a>)</li>
+<li>support JWT response on userinfo endpoint (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/da1649499376863b0ebf884748176f3b38d91899">da16494</a>)</li>
+<li>Custom grant type added (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/919">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/919</a>)</li>
+<li>Listen for storage to receive auth hash from popup (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/935">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/935</a>)</li>
+<li>Add event for unchanged session (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/936">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/936</a>)</li>
+<li>Add loginHint to codeFlow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/938">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/938</a>)</li>
+<li>Add a windowRef option to initLoginFlowInPopup to prevent the window from beeing blocked by popup blockers (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/965">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/965</a>)</li>
+<li>Use configured revocationEndpoint by default (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/pull/1020">https://github.com/manfredsteyer/angular-oauth2-oidc/pull/1020</a>)</li>
+</ul>
+<h2>10.0.0 (2020-06-30)</h2>
+<ul>
+<li>chore: increase version in package.json (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/84d95a7">84d95a7</a>)</li>
+<li>chore: make version 9.2 ready (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/415e053">415e053</a>)</li>
+<li>chore(deps): bump jsrsasign from 8.0.12 to 8.0.19 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4def1c1">4def1c1</a>)</li>
+<li>chore(deps): bump websocket-extensions from 0.1.3 to 0.1.4 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/cae715e">cae715e</a>)</li>
+<li>chore(release): 9.2.1 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/7a15194">7a15194</a>)</li>
+<li>chore(release): 9.2.2 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/40f5ae5">40f5ae5</a>)</li>
+<li>chore(release): 9.3.0 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/f42f943">f42f943</a>)</li>
+<li>refactor: inline js-sha256 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/ca435c0">ca435c0</a>)</li>
+<li>refactor: remove dep on contributer-table (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/b486546">b486546</a>)</li>
+<li>refactor: use esm for sha-256 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/92ee76d">92ee76d</a>)</li>
+<li>feat(oauth-service): pass custom url params to logOut (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4607d55">4607d55</a>)</li>
+<li>feat(oauth-service): revokeTokenAndLogout with cust params (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/026dcb3">026dcb3</a>)</li>
+<li>&#39;disableAtHashCheck&#39; by default if responseType is &#39;id_token&#39; (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/169d749">169d749</a>)</li>
+<li>#825: (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/38c7c3f">38c7c3f</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/825">#825</a></li>
+<li>#825: (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/fb3afe4">fb3afe4</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/825">#825</a></li>
+<li>Fix issue with ambient type in constructor when running Universal with Ivy (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/9e95c73">9e95c73</a>)</li>
+<li>Fix typo in code-flow.md (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/1816e7b">1816e7b</a>)</li>
+<li>Replaced document by this.document #773 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/678ff95">678ff95</a>), closes <a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/773">#773</a></li>
+<li>response_types including &#39;code&#39; gets a code_challenge (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/58a8132">58a8132</a>)</li>
+<li>Update code-flow.md (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/5c5288c">5c5288c</a>)</li>
+<li>docs(readme): use our own idsvr (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/65c2b95">65c2b95</a>)</li>
+<li>fix: loadDiscoveryDocumentAndLogin should pass state into initLoginFlow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/132c624">132c624</a>)</li>
+<li>fix(lib): copying LICENSE file to output build (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/e89aa6d">e89aa6d</a>)</li>
+</ul>
+<h1><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/9.2.0...10.0.0">10.0.0</a> (2020-06-30)</h1>
+<h3>Bug Fixes</h3>
+<ul>
+<li>loadDiscoveryDocumentAndLogin should pass state into initLoginFlow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/132c62426cfe07ddaf0eebb85bdf062ee49e4a06">132c624</a>)</li>
+<li><strong>lib:</strong> copying LICENSE file to output build (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/e89aa6d90054dc4ad20f234db2107e82b11a9386">e89aa6d</a>)</li>
+</ul>
+<h3>Features</h3>
+<ul>
+<li><strong>oauth-service:</strong> pass custom url params to logOut (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4607d55c6bdf608a32a2a029feac9eb37bfb493d">4607d55</a>)</li>
+<li><strong>oauth-service:</strong> revokeTokenAndLogout with cust params (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/026dcb38e4299afbab8faff1d54dba94cadc1aa6">026dcb3</a>)</li>
+</ul>
+<h1><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/v9.3.0...v10.0.0">10.0.0</a> (2020-06-30)</h1>
+<h1>Changelog</h1>
+<p>All notable changes to this project will be documented in this file. See <a href="https://github.com/conventional-changelog/standard-version">standard-version</a> for commit guidelines.</p>
+<h3>Features</h3>
+<ul>
+<li><strong>automatic silent refresh:</strong> stopAutomaticRefresh stops all timers. (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/8ab853bf38dd162060d7b6cbd18f7b4fd5a84f18">8ab853b</a>)</li>
+<li><strong>code-flow:</strong> allow using implicit flow by setting useSilentRefresh to true (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/93902a5808bb9b75a41d4bde44c6ab763bcfa9f6">93902a5</a>)</li>
+<li><strong>oauth-service:</strong> pass custom url params to logOut (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4607d55c6bdf608a32a2a029feac9eb37bfb493d">4607d55</a>)</li>
+<li><strong>oauth-service:</strong> revokeTokenAndLogout with cust params (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/026dcb38e4299afbab8faff1d54dba94cadc1aa6">026dcb3</a>)</li>
+<li><strong>sample:</strong> also use new idsvr 4 for implicit flow demo to prevent issues with same site cookies (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/58c63541bc7d83d72c30577da2b68ac2d1dc35b7">58c6354</a>)</li>
+<li><strong>session checks:</strong> Session checks work now for code flow too. Pls see Docs for details. (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4bf89014d8cc5d50ed716500e3f3ad265b4ae2db">4bf8901</a>)</li>
+<li><strong>token-revocation:</strong> also revoke refresh_token (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/429ed2c5b50c60ac857ff0ffe84c1d7fc995c6dd">429ed2c</a>)</li>
+<li>remove jsrsasign dependancy (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/77cb37abfd08762a59b221257ed8d5d5b7c795d4">77cb37a</a>)</li>
+<li>Upgrade to angular 8 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/31c6273b388af7e796a9ad663e346f1e33ff331c">31c6273</a>)</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li>loadDiscoveryDocumentAndLogin should pass state into initLoginFlow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/132c62426cfe07ddaf0eebb85bdf062ee49e4a06">132c624</a>)</li>
+<li><strong>lib:</strong> copying LICENSE file to output build (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/e89aa6d90054dc4ad20f234db2107e82b11a9386">e89aa6d</a>)</li>
+<li><strong>revoketokenandlogout:</strong> explicit way to revoke an access token (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c799eadbfa616d459af8be1a667499834745d78f">c799ead</a>)</li>
+<li><strong>sample:</strong> make sense of the guard (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/1cae011532dc91a250368c95120812d2f78f8109">1cae011</a>)</li>
+<li><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/687">#687</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/e2599e071307ae1efe1592c83bb3b7a01642a61d">e2599e0</a>)</li>
+<li><strong>code flow:</strong> Fixed code flow for IE 11 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/0f03d393aac9fe4e26444a73884dd154318d530f">0f03d39</a>)</li>
+<li><strong>sample:</strong> use hash-based routing (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/3f44ecae157305c56ae377fcd6d2df8dfde8adf5">3f44eca</a>)</li>
+<li><strong>session state:</strong> save session_state also when using code flow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/8fa99ff721ea2b08f28bc5e9fa3e48a459e2a59a">8fa99ff</a>)</li>
+<li><strong>state:</strong> passing an url with a querystring as the state, e. g. url?x=1 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/71b705cb5105f6dfb49aabc55607745b881c5dc3">71b705c</a>)</li>
+<li>missing HttpModule dependency (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/7eac8ae5cd1fd549f3933c30790f4b802c2c09f0">7eac8ae</a>)</li>
+<li>run tokensetup outside ngzone (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/07bb62d06abb84ef2da010977d07bfd2a3805b16">07bb62d</a>)</li>
+<li>typo (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/3d331f2166340db43f0aaca42ce8abc4913cd027">3d331f2</a>)</li>
+</ul>
+<h3><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/v9.2.1...v9.2.2">9.2.2</a> (2020-05-09)</h3>
+<h3><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/v9.2.0...v9.2.1">9.2.1</a> (2020-04-23)</h3>
+<h2><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/compare/v9.1.0...v9.2.0">9.2.0</a> (2020-03-28)</h2>
+<h3>Features</h3>
+<ul>
+<li><p><strong>revoketokenandlogout:</strong> explicit way to revoke an access token according to <a href="https://tools.ietf.org/html/rfc7009">RFC 7009</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/c799eadbfa616d459af8be1a667499834745d78f">c799ead</a>)</p>
+</li>
+<li><p><strong>token-revocation:</strong> also revoke refresh_token (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/429ed2c5b50c60ac857ff0ffe84c1d7fc995c6dd">429ed2c</a>)</p>
+</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>sample:</strong> make sense of the guard (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/1cae011532dc91a250368c95120812d2f78f8109">1cae011</a>)</li>
+</ul>
+<h2>9.1.0 (2020-03-23)</h2>
+<h3>Features</h3>
+<ul>
+<li><strong>automatic silent refresh:</strong> stopAutomaticRefresh stops all timers. (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/8ab853bf38dd162060d7b6cbd18f7b4fd5a84f18">8ab853b</a>)</li>
+<li><strong>code-flow:</strong> allow using silent refresh by setting useSilentRefresh to true (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/93902a5808bb9b75a41d4bde44c6ab763bcfa9f6">93902a5</a>)</li>
+<li><strong>sample:</strong> Also use new Identity Server 4 for implicit flow demo to prevent issues with same site cookies (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/58c63541bc7d83d72c30577da2b68ac2d1dc35b7">58c6354</a>)</li>
+<li><strong>session checks:</strong> Session checks work now for code flow too. Please see docs for details. (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/4bf89014d8cc5d50ed716500e3f3ad265b4ae2db">4bf8901</a>)</li>
+</ul>
+<h3>Bug Fixes</h3>
+<ul>
+<li><strong>code flow:</strong> Fixed code flow for IE 11 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/0f03d393aac9fe4e26444a73884dd154318d530f">0f03d39</a>)</li>
+<li><strong>sample:</strong> use hash-based routing (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/3f44ecae157305c56ae377fcd6d2df8dfde8adf5">3f44eca</a>)</li>
+<li><strong>session state:</strong> save session_state also when using code flow (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/8fa99ff721ea2b08f28bc5e9fa3e48a459e2a59a">8fa99ff</a>)</li>
+<li><strong>state:</strong> passing an url with a querystring as the state, e. g. url?x=1 (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/71b705cb5105f6dfb49aabc55607745b881c5dc3">71b705c</a>)</li>
+<li><a href="https://github.com/manfredsteyer/angular-oauth2-oidc/issues/687">#687</a> (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/e2599e071307ae1efe1592c83bb3b7a01642a61d">e2599e0</a>)</li>
+<li>missing HttpModule dependency (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/7eac8ae5cd1fd549f3933c30790f4b802c2c09f0">7eac8ae</a>)</li>
+<li>run tokensetup outside ngzone (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/07bb62d06abb84ef2da010977d07bfd2a3805b16">07bb62d</a>)</li>
+<li>typo (<a href="https://github.com/manfredsteyer/angular-oauth2-oidc/commit/3d331f2166340db43f0aaca42ce8abc4913cd027">3d331f2</a>)</li>
+</ul>
+<h3>Pull Requests</h3>
+<ul>
+<li>Update sample app and silent-refresh.html script #755, linjie997</li>
+<li>Add optional state parameter for logout, pmccloghrylaing</li>
+<li>fix customHashFragment usage in tryLoginCodeFlow, roblabat</li>
+<li>replace document with injectionToken #741, d-moos</li>
+<li>Support predefined custom parameters extraction from the TokenResponse, vdveer</li>
+<li>Fixed not working silent refresh when using &#39;code&#39; #735, ErazerBrecht</li>
+</ul>
+<h3>Thanks</h3>
+<p>Big Thanks to all contributers: Brecht Carlier, Daniel Moos, Jie Lin, Manfred Steyer, Phil McCloghry-Laing, robin labat, vdveer</p>
+<p>Also, big thanks to jeroenheijmans for doing an awesome job with moderating and analyzing the issues!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'changelog.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+
+       <script src="./js/menu-wc.js" defer></script>
+       <script nomodule src="./js/menu-wc_es5.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+       <script src="./js/libs/zepto.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
