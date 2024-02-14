@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  security:
+#    user:
+#      # Definition of the user details that we will use for login
+#      # in the authorization server
+#      name: user
+#      password: "{noop}password"
+    oauth2:
+      client:
+#        angular:
+#          registration:
+#            client-id: angular-oidc
+#            # 一般需要加密，POC暫時不加
+#            #              client-secret: "{noop}abc12345"
+#            authorization-grant-types:
+#              - "authorization_code"
+#              - "refresh_token"
+#            client-authentication-methods:
+#              - none
+#            # This following redirect URI will be used to redirect the resource owner to the
+#            # Client application after the resource owner (user) provides necessary consents.
+#            redirect-uris:
+#              - http://oidc-ui:4200/login/oauth2/code/angular-oidc
+#              - http://oidc-ui:4200/authorized
+#              - http://oidc-ui:4200/home/index.html
+#              - http://oidc-ui:4200/home/*/index.html
+#              - http://oidc-ui:4200/index.html
+#              - http://oidc-ui:4200/*/index.html
+#              - http://oidc-ui:4200/silent-refresh.html
+#              - http://oidc-ui:4200/*/silent-refresh.html
+#            post-logout-redirect-uris:
+#              - http://oidc-ui:4200/
+#            # The scopes are defined in the authorization server.
+#            # These won't display in the consent page
+#            scopes:
+#              - openid
+#              - ui
+#          # PKCE setting
+#          require-proof-key: true
+#          # Marking this flag as true will display the consent page
+#          require-authorization-consent: false
+#          # Here we set the access token and refresh token validity duration
+#          # in seconds
+#          token:
+#            access-token-time-to-live: 60s
+#            refresh-token-time-to-live: 120s
+        registration:
+          google-idp:
+            provider: google
+            client-id: ${GOOGLE_CLIENT_ID:google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:google-client-secret}
+            scope: openid, https://www.googleapis.com/auth/userinfo.profile, https://www.googleapis.com/auth/userinfo.email
+            client-name: Sign in with Google
+          github-idp:
+            provider: github
+            client-id: ${GITHUB_CLIENT_ID:github-client-id}
+            client-secret: ${GITHUB_CLIENT_SECRET:github-client-secret}
+            scope: user:email, read:user
+            client-name: Sign in with GitHub
+        provider:
+          google:
+            user-name-attribute: email
+          github:
+            user-name-attribute: login
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: trace
+    org.springframework.security.oauth2: trace

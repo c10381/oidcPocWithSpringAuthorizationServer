@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.web.DefaultOAuth2Authorization
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestCustomizers;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -38,6 +39,7 @@ public class SecurityConfig {
             })
             .logout((logout) -> logout
                     .logoutSuccessHandler(oidcLogoutSuccessHandler())
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             )
 //            .oidcLogout(logout -> logout.backChannel(Customizer.withDefaults()))
             .oauth2ResourceServer(oauth2ResourceServer ->
