@@ -14,8 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportRuntimeHints;
 
 @SpringBootApplication
-@ImportRuntimeHints(DemoAuthorizationServerApplication.DemoAuthorizationServerApplicationRuntimeHintsRegistrar.class)
-public class DemoAuthorizationServerApplication {
+@ImportRuntimeHints(SpringAuthorizationServerApplication.DemoAuthorizationServerApplicationRuntimeHintsRegistrar.class)
+public class SpringAuthorizationServerApplication {
 
 	static class DemoAuthorizationServerApplicationRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
@@ -35,7 +35,7 @@ public class DemoAuthorizationServerApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoAuthorizationServerApplication.class, args);
+		SpringApplication.run(SpringAuthorizationServerApplication.class, args);
 	}
 
 }

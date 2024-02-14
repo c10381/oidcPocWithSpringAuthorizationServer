@@ -8,6 +8,8 @@
         <option value="$PROJECT_DIR$/ResourceService-2/pom.xml" />
         <option value="$PROJECT_DIR$/AuthorizationServiceOffice/pom.xml" />
         <option value="$PROJECT_DIR$/AuthorizationService/pom.xml" />
+        <option value="$PROJECT_DIR$/Keycloak-embedded-authorization-server/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringAuthorizationService/pom.xml" />
       </list>
     </option>
   </component>

@@ -8,15 +8,21 @@
         <outputRelativeToContentRoot value="true" />
         <module name="ResourceService-1" />
         <module name="ResourceService-2" />
+        <module name="keycloak-embedded-authorization-server" />
         <module name="AuthorizationService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="oauth-authorization-server" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="AuthorizationService" options="-parameters" />
       <module name="ResourceService-1" options="-parameters" />
       <module name="ResourceService-2" options="-parameters" />
+      <module name="keycloak-embedded-authorization-server" options="-parameters" />
+      <module name="oauth-authorization-server" options="-parameters" />
     </option>
   </component>
 </project>
