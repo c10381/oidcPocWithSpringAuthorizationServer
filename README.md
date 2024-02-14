@@ -36,8 +36,12 @@
 3. Spring-Authorization-server資訊如下
    - [http://auth-server:8080](http://auth-server:8080)
    - 帳號密碼：user/password
+   - 已知問題
+     - SLO不支援
+     - 會一直出現Access Deny狀況，待盤查
 3. keycloak-Authorization-server資訊如下
    - 目前DB為h2，重啟會重新load`baeldung-realm.json`
    - [http://auth-server:8083](http://auth-server:8083)
    - 測試帳號密碼：user/pass
    - [admin頁面](http://auth-server:8083/auth/)，bael-admin/pass
+   - 可使用[Custom User Providers](https://www.baeldung.com/java-keycloak-custom-user-providers)實作User相關細節，包含登入/User資訊分開
