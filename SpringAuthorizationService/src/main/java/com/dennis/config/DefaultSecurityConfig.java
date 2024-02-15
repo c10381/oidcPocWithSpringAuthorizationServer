@@ -16,12 +16,12 @@
 package com.dennis.config;
 
 import com.dennis.federation.FederatedIdentityAuthenticationSuccessHandler;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
@@ -31,6 +31,11 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 /**
  * @author Joe Grandja
@@ -38,15 +43,14 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
  * @since 1.1
  */
 @EnableWebSecurity
-@Configuration(proxyBeanMethods = false)
+@Configuration()
 public class DefaultSecurityConfig {
 
 	// @formatter:off
 	@Bean
 	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-		http
-				.cors(AbstractHttpConfigurer::disable)
-				.csrf(AbstractHttpConfigurer::disable)
+		http.cors(Customizer.withDefaults())
+			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize ->
 				authorize
 					.requestMatchers("/assets/**", "/login", "/oauth/authorize", "/userinfo").permitAll()
@@ -82,6 +86,17 @@ public class DefaultSecurityConfig {
 				.roles("USER")
 				.build();
 		return new InMemoryUserDetailsManager(user);
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(List.of("*"));
+		configuration.setAllowedMethods(List.of("*"));
+		configuration.setAllowedHeaders(List.of("*"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 	// @formatter:on
 
