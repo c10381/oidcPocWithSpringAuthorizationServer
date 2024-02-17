@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -82,7 +83,8 @@ public class AuthorizationServerConfig {
 				new DeviceClientAuthenticationProvider(registeredClientRepository);
 
 		// @formatter:off
-		http.cors(c -> c.configurationSource(corsConfigurationSource()))
+		http.cors(Customizer.withDefaults())
+				.headers(c -> c.frameOptions(FrameOptionsConfig::disable))
 			.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 			.deviceAuthorizationEndpoint(deviceAuthorizationEndpoint ->
 				deviceAuthorizationEndpoint.verificationUri("/activate")
@@ -114,6 +116,7 @@ public class AuthorizationServerConfig {
 		return http.build();
 	}
 
+	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOriginPatterns(List.of("*"));

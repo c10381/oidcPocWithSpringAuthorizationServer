@@ -1,1 +1,1 @@
-com.dennis.auth.config.SimplePlatformProvider
+com.dennis.auth.keycloak.config.SimplePlatformProvider

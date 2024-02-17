@@ -1,5 +1,6 @@
 package com.dennis.auth;
 
+import com.dennis.auth.keycloak.config.KeycloakProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,10 +12,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 
-import com.dennis.auth.config.KeycloakServerProperties;
+import com.dennis.auth.keycloak.config.KeycloakServerProperties;
 
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
-@EnableConfigurationProperties({ KeycloakServerProperties.class })
+@EnableConfigurationProperties({ KeycloakServerProperties.class, KeycloakProperties.class, })
 public class KeycloakAuthorizationServerApp {
 
 	private static final Logger LOG = LoggerFactory.getLogger(KeycloakAuthorizationServerApp.class);
@@ -28,7 +29,6 @@ public class KeycloakAuthorizationServerApp {
 			KeycloakServerProperties keycloakServerProperties) {
 
 		return (evt) -> {
-
 			Integer port = serverProperties.getPort();
 			String keycloakContextPath = keycloakServerProperties.getContextPath();
 

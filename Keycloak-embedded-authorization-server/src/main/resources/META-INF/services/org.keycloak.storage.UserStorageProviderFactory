@@ -1,1 +1,1 @@
-com.dennis.auth.provider.user.CustomUserStorageProviderFactory
+com.dennis.auth.keycloak.provider.user.CustomUserStorageProviderFactory

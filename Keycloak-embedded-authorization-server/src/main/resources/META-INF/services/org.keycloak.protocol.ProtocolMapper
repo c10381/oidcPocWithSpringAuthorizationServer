@@ -1,1 +1,1 @@
-com.dennis.auth.provider.mapper.CustomProtocolMapper
+com.dennis.auth.keycloak.provider.mapper.CustomProtocolMapper
