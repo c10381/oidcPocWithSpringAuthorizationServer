@@ -7,12 +7,16 @@ import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthentica
 import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthenticationProvider;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.token.*;
+import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -56,7 +60,8 @@ public class AuthorizationServerConfig {
 
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-		http.cors(c -> c.configurationSource(corsConfigurationSource()))
+		http.cors(Customizer.withDefaults())
+				.headers(c -> c.frameOptions(FrameOptionsConfig::disable))
 			.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
 			.tokenGenerator(refreshTokenGenerator(new NimbusJwtEncoder(jwkSource)))
 			.clientAuthentication(clientAuthentication ->
@@ -78,6 +83,7 @@ public class AuthorizationServerConfig {
 		return http.build();
 	}
 
+	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
 		config.setAllowedOriginPatterns(List.of("*"));

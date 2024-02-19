@@ -1,1 +1,1 @@
-com.dennis.auth.config.Resteasy3Provider
+com.dennis.auth.keycloak.config.Resteasy3Provider
