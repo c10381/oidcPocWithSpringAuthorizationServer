@@ -937,7 +937,8 @@ export class OAuthService extends AuthConfig implements OnDestroy {
       let params = new HttpParams({ encoder: new WebHttpUrlEncodingCodec() })
         .set('grant_type', 'refresh_token')
         .set('scope', this.scope)
-        .set('refresh_token', this._storage.getItem('refresh_token'));
+        .set('refresh_token', this._storage.getItem('refresh_token'))
+        .set('code_verifier', this._storage.getItem('PKCE_verifier'));
 
       let headers = new HttpHeaders().set(
         'Content-Type',
@@ -1678,6 +1679,7 @@ export class OAuthService extends AuthConfig implements OnDestroy {
     grantedScopes: string,
     customParameters?: Map<string, string>
   ): void {
+    console.log('storeAccessTokenResponse scope', grantedScopes);
     this._storage.setItem('access_token', accessToken);
     if (grantedScopes && !Array.isArray(grantedScopes)) {
       this._storage.setItem(

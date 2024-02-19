@@ -1,19 +1,21 @@
 package com.dennis.config;
 
-import java.util.List;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
+import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthenticationConverter;
+import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthenticationProvider;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
+import org.springframework.security.crypto.keygen.StringKeyGenerator;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import com.dennis.authentication.DeviceClientAuthenticationProvider;
-import com.dennis.federation.FederatedIdentityIdTokenCustomizer;
-import com.dennis.jose.Jwks;
-import com.dennis.web.authentication.DeviceClientAuthenticationConverter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +31,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
@@ -39,68 +40,31 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class AuthorizationServerConfig {
-	private static final String CUSTOM_CONSENT_PAGE_URI = "/oauth2/consent";
 
 	@Bean
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public SecurityFilterChain authorizationServerSecurityFilterChain(
 			HttpSecurity http, RegisteredClientRepository registeredClientRepository,
-			AuthorizationServerSettings authorizationServerSettings,
-			JWKSource<SecurityContext> jwkSource
-			) throws Exception {
+			JWKSource<SecurityContext> jwkSource,
+			JdbcOAuth2AuthorizationService authorizationService) throws Exception {
 
 		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-		/*
-		 * This sample demonstrates the use of a public client that does not
-		 * store credentials or authenticate with the authorization server.
-		 *
-		 * The following components show how to customize the authorization
-		 * server to allow for device clients to perform requests to the
-		 * OAuth 2.0 Device Authorization Endpoint and Token Endpoint without
-		 * a clientId/clientSecret.
-		 *
-		 * CAUTION: These endpoints will not require any authentication, and can
-		 * be accessed by any client that has a valid clientId.
-		 *
-		 * It is therefore RECOMMENDED to carefully monitor the use of these
-		 * endpoints and employ any additional protections as needed, which is
-		 * outside the scope of this sample.
-		 */
-		DeviceClientAuthenticationConverter deviceClientAuthenticationConverter =
-				new DeviceClientAuthenticationConverter(
-						"/**" + authorizationServerSettings.getDeviceAuthorizationEndpoint());
-		DeviceClientAuthenticationProvider deviceClientAuthenticationProvider =
-				new DeviceClientAuthenticationProvider(registeredClientRepository);
-
-		// @formatter:off
 		http.cors(c -> c.configurationSource(corsConfigurationSource()))
 			.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.deviceAuthorizationEndpoint(deviceAuthorizationEndpoint ->
-				deviceAuthorizationEndpoint.verificationUri("/activate")
-			)
-			.deviceVerificationEndpoint(deviceVerificationEndpoint ->
-				deviceVerificationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI)
-			)
+			.tokenGenerator(refreshTokenGenerator(new NimbusJwtEncoder(jwkSource)))
 			.clientAuthentication(clientAuthentication ->
 				clientAuthentication
-					.authenticationConverter(deviceClientAuthenticationConverter)
-					.authenticationProvider(deviceClientAuthenticationProvider)
+					.authenticationConverter(new PublicClientRefreshTokenAuthenticationConverter())
+					.authenticationProvider(new PublicClientRefreshTokenAuthenticationProvider(registeredClientRepository, authorizationService))
 			)
-			.authorizationEndpoint(authorizationEndpoint ->
-				authorizationEndpoint.consentPage(CUSTOM_CONSENT_PAGE_URI))
-			.oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-		// @formatter:on
-
-		// @formatter:off
+			.oidc(Customizer.withDefaults());
 		http
 			.exceptionHandling((exceptions) -> exceptions
 				.defaultAuthenticationEntryPointFor(
@@ -110,7 +74,7 @@ public class AuthorizationServerConfig {
 			)
 			.oauth2ResourceServer(oauth2ResourceServer ->
 				oauth2ResourceServer.jwt(conf -> conf.decoder(OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource))));
-		// @formatter:on
+
 		return http.build();
 	}
 
@@ -120,17 +84,11 @@ public class AuthorizationServerConfig {
 		config.setAllowedMethods(List.of("OPTIONS","HEAD", "GET", "PUT", "POST", "DELETE", "PATCH"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
-//		config.addAllowedOriginPattern("/**");
-//		config.addAllowedHeader("*");
-//		config.addAllowedMethod("GET");
-//		config.addAllowedMethod("OPTIONS");
-
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
 
-	// @formatter:off
 	@Bean
 	public JdbcRegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
 		RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -189,7 +147,6 @@ public class AuthorizationServerConfig {
 
 		return registeredClientRepository;
 	}
-	// @formatter:on
 
 	@Bean
 	public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
@@ -205,30 +162,12 @@ public class AuthorizationServerConfig {
 	}
 
 	@Bean
-	public OAuth2TokenCustomizer<JwtEncodingContext> idTokenCustomizer() {
-		return new FederatedIdentityIdTokenCustomizer();
-	}
-
-	@Bean
-	public JWKSource<SecurityContext> jwkSource() {
-		RSAKey rsaKey = Jwks.generateRsa();
-		JWKSet jwkSet = new JWKSet(rsaKey);
-		return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
-	}
-
-	@Bean
-	public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-		return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-	}
-
-	@Bean
 	public AuthorizationServerSettings authorizationServerSettings() {
 		return AuthorizationServerSettings.builder().build();
 	}
 
 	@Bean
 	public EmbeddedDatabase embeddedDatabase() {
-		// @formatter:off
 		return new EmbeddedDatabaseBuilder()
 				.generateUniqueName(true)
 				.setType(EmbeddedDatabaseType.H2)
@@ -237,7 +176,27 @@ public class AuthorizationServerConfig {
 				.addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
 				.addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
 				.build();
-		// @formatter:on
 	}
 
+	// Allow configurable refresh token strategy for PKCE authorization_code grant flow
+	OAuth2TokenGenerator<?> refreshTokenGenerator(NimbusJwtEncoder nimbusJwtEncoder) {
+		JwtGenerator jwtGenerator = new JwtGenerator(nimbusJwtEncoder);
+		OAuth2TokenGenerator<OAuth2RefreshToken> refreshTokenGenerator = new CustomRefreshTokenGenerator();
+		return new DelegatingOAuth2TokenGenerator(jwtGenerator, refreshTokenGenerator);
+	}
+
+	private static final class CustomRefreshTokenGenerator implements OAuth2TokenGenerator<OAuth2RefreshToken> {
+		private final StringKeyGenerator refreshTokenGenerator =
+				new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 96);
+		@Override
+		public OAuth2RefreshToken generate(OAuth2TokenContext context) {
+			if (!OAuth2TokenType.REFRESH_TOKEN.equals(context.getTokenType()))
+			{
+				return null;
+			}
+			Instant issuedAt = Instant.now();
+			Instant expiresAt = issuedAt.plus(context.getRegisteredClient().getTokenSettings().getRefreshTokenTimeToLive());
+			return new OAuth2RefreshToken(this.refreshTokenGenerator.generateKey(), issuedAt, expiresAt);
+		}
+	}
 }
