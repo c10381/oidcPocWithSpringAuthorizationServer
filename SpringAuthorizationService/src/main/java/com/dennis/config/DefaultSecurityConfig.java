@@ -53,7 +53,7 @@ public class DefaultSecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(authorize ->
 				authorize
-					.requestMatchers("/assets/**", "/login", "/oauth/authorize", "/userinfo").permitAll()
+					.requestMatchers("/assets/**", "/login","/logout", "/oauth/authorize", "/userinfo").permitAll()
 					.anyRequest().authenticated()
 //					.anyRequest().permitAll()
 			)

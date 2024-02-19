@@ -7,12 +7,22 @@ import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthentica
 import com.dennis.authentication.refreshToken.PublicClientRefreshTokenAuthenticationProvider;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import java.util.function.Consumer;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
 import org.springframework.security.crypto.keygen.StringKeyGenerator;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
+import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationContext;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationException;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationProvider;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationToken;
+import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationValidator;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
@@ -59,12 +69,14 @@ public class AuthorizationServerConfig {
 
 		http.cors(Customizer.withDefaults())
 				.headers(c -> c.frameOptions(FrameOptionsConfig::disable))
-			.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.tokenGenerator(refreshTokenGenerator(new NimbusJwtEncoder(jwkSource)))
-			.clientAuthentication(clientAuthentication ->
-				clientAuthentication
-					.authenticationConverter(new PublicClientRefreshTokenAuthenticationConverter())
-					.authenticationProvider(new PublicClientRefreshTokenAuthenticationProvider(registeredClientRepository, authorizationService))
+				.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+				.tokenGenerator(refreshTokenGenerator(new NimbusJwtEncoder(jwkSource)))
+				.authorizationEndpoint(authorizationEndpoint ->
+						authorizationEndpoint.authenticationProviders(configureAuthenticationValidator()))
+				.clientAuthentication(clientAuthentication ->
+						clientAuthentication
+								.authenticationConverter(new PublicClientRefreshTokenAuthenticationConverter())
+								.authenticationProvider(new PublicClientRefreshTokenAuthenticationProvider(registeredClientRepository, authorizationService))
 			)
 			.oidc(Customizer.withDefaults());
 		http
@@ -105,11 +117,7 @@ public class AuthorizationServerConfig {
 				.clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
 				.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-				.redirectUri("http://oidc-ui:4200/login/oauth2/code/angular-oidc")
-				.redirectUri("http://oidc-ui:4200/authorized")
 				.redirectUri("http://oidc-ui:4200/*")
-				.redirectUri("http://oidc-ui:4200/index.html")
-				.redirectUri("http://oidc-ui:4200/silent-refresh.html")
 				.postLogoutRedirectUri("http://oidc-ui:4200/index.html")
 				.scope(OidcScopes.OPENID)
 				.scope("ui")
@@ -157,6 +165,67 @@ public class AuthorizationServerConfig {
 		return AuthorizationServerSettings.builder().build();
 	}
 
+	/**
+	 * 檢查redirect url相關設定
+ 	 */
+	private Consumer<List<AuthenticationProvider>> configureAuthenticationValidator() {
+		return (authenticationProviders) ->
+				authenticationProviders.forEach((authenticationProvider) -> {
+					if (authenticationProvider instanceof OAuth2AuthorizationCodeRequestAuthenticationProvider) {// Override default redirect_uri validator
+						Consumer<OAuth2AuthorizationCodeRequestAuthenticationContext> authenticationValidator =
+								redirectUrlWildcardValidator
+										.andThen(OAuth2AuthorizationCodeRequestAuthenticationValidator.DEFAULT_SCOPE_VALIDATOR); // Reuse default scope validator
+						((OAuth2AuthorizationCodeRequestAuthenticationProvider) authenticationProvider).setAuthenticationValidator(authenticationValidator);
+					}
+				});
+	}
+
+	Consumer<OAuth2AuthorizationCodeRequestAuthenticationContext> redirectUrlWildcardValidator = (context) -> {
+		OAuth2AuthorizationCodeRequestAuthenticationToken authorizationCodeRequestAuthentication =
+				context.getAuthentication();
+		RegisteredClient registeredClient = context.getRegisteredClient();
+		Set<String> clientAllowRedirectUris = registeredClient.getRedirectUris();
+		String requestedRedirectUri = Optional.ofNullable(authorizationCodeRequestAuthentication.getRedirectUri())
+				.orElseThrow(() -> new OAuth2AuthorizationCodeRequestAuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), null));
+		for(var clientAllowUris : clientAllowRedirectUris){
+			if(match(clientAllowUris, requestedRedirectUri)){
+				return;
+			}
+		}
+		throw new OAuth2AuthorizationCodeRequestAuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST), null);
+	};
+
+	/**
+	 * 檢查輸入的URL是否符合給定的模式。
+	 * 如果模式中包含'*'，則'*'表示任意長度的任意字符。
+	 * 對於其他特殊字符，如[], {}, (), ?, +, ^, $, |，進行轉義處理。
+	 *
+	 * @param pattern 網址模式，可能包含'*'作為通配符
+	 * @param url 要檢查的URL字符串
+	 * @return 如果URL符合模式，則返回true，否則返回false
+	 */
+	public static boolean match(String pattern, String url) {
+		// 處理正則表達式的特殊字符
+		String escapedPattern = pattern
+				.replace(".", "\\.")
+				.replace("*", ".*")
+				.replace("?", "\\?")
+				.replace("+", "\\+")
+				.replace("^", "\\^")
+				.replace("$", "\\$")
+				.replace("|", "\\|")
+				.replace("(", "\\(")
+				.replace(")", "\\)")
+				.replace("[", "\\[")
+				.replace("]", "\\]")
+				.replace("{", "\\{")
+				.replace("}", "\\}");
+
+		return url.matches(escapedPattern);
+	}
+
+
+
 	@Bean
 	public EmbeddedDatabase embeddedDatabase() {
 		return new EmbeddedDatabaseBuilder()
@@ -169,25 +238,37 @@ public class AuthorizationServerConfig {
 				.build();
 	}
 
-	// Allow configurable refresh token strategy for PKCE authorization_code grant flow
-	OAuth2TokenGenerator<?> refreshTokenGenerator(NimbusJwtEncoder nimbusJwtEncoder) {
+	/**
+	 * Allow configurable refresh token strategy for PKCE authorization_code grant flow
+	 * @param nimbusJwtEncoder
+	 * @return
+	 */
+	OAuth2TokenGenerator<OAuth2Token> refreshTokenGenerator(NimbusJwtEncoder nimbusJwtEncoder) {
 		JwtGenerator jwtGenerator = new JwtGenerator(nimbusJwtEncoder);
-		OAuth2TokenGenerator<OAuth2RefreshToken> refreshTokenGenerator = new CustomRefreshTokenGenerator();
-		return new DelegatingOAuth2TokenGenerator(jwtGenerator, refreshTokenGenerator);
-	}
-
-	private static final class CustomRefreshTokenGenerator implements OAuth2TokenGenerator<OAuth2RefreshToken> {
-		private final StringKeyGenerator refreshTokenGenerator =
-				new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 96);
-		@Override
-		public OAuth2RefreshToken generate(OAuth2TokenContext context) {
-			if (!OAuth2TokenType.REFRESH_TOKEN.equals(context.getTokenType()))
-			{
+		OAuth2TokenGenerator<OAuth2RefreshToken> refreshTokenGenerator = context -> {
+			final StringKeyGenerator tokenGenerator = new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 96);
+			if (!OAuth2TokenType.REFRESH_TOKEN.equals(context.getTokenType())) {
 				return null;
 			}
 			Instant issuedAt = Instant.now();
 			Instant expiresAt = issuedAt.plus(context.getRegisteredClient().getTokenSettings().getRefreshTokenTimeToLive());
-			return new OAuth2RefreshToken(this.refreshTokenGenerator.generateKey(), issuedAt, expiresAt);
-		}
+			return new OAuth2RefreshToken(tokenGenerator.generateKey(), issuedAt, expiresAt);
+		};
+		return new DelegatingOAuth2TokenGenerator(jwtGenerator, refreshTokenGenerator);
 	}
+//
+//	private static final class CustomRefreshTokenGenerator implements OAuth2TokenGenerator<OAuth2RefreshToken> {
+//		private final StringKeyGenerator refreshTokenGenerator =
+//				new Base64StringKeyGenerator(Base64.getUrlEncoder().withoutPadding(), 96);
+//		@Override
+//		public OAuth2RefreshToken generate(OAuth2TokenContext context) {
+//			if (!OAuth2TokenType.REFRESH_TOKEN.equals(context.getTokenType()))
+//			{
+//				return null;
+//			}
+//			Instant issuedAt = Instant.now();
+//			Instant expiresAt = issuedAt.plus(context.getRegisteredClient().getTokenSettings().getRefreshTokenTimeToLive());
+//			return new OAuth2RefreshToken(this.refreshTokenGenerator.generateKey(), issuedAt, expiresAt);
+//		}
+//	}
 }
