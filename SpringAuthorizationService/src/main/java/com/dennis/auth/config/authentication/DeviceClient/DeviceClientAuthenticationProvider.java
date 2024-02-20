@@ -1,4 +1,4 @@
-package com.dennis.authentication;
+package com.dennis.auth.config.authentication.DeviceClient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

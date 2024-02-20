@@ -1,4 +1,4 @@
-package com.dennis.web;
+package com.dennis.auth.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

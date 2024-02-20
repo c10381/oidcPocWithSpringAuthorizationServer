@@ -1,4 +1,4 @@
-package com.dennis.authentication.refreshToken;
+package com.dennis.auth.config.authentication.publicClientRefreshToken;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

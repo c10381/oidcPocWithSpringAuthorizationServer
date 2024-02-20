@@ -1,4 +1,4 @@
-package com.dennis.web;
+package com.dennis.auth.web;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;

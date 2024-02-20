@@ -1,8 +1,8 @@
-package com.dennis.web.authentication;
+package com.dennis.auth.web.authentication;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import com.dennis.authentication.DeviceClientAuthenticationToken;
+import com.dennis.auth.config.authentication.DeviceClient.DeviceClientAuthenticationToken;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.lang.Nullable;

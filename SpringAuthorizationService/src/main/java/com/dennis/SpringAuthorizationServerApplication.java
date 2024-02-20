@@ -1,8 +1,11 @@
 package com.dennis;
 
-import com.dennis.web.AuthorizationConsentController.ScopeWithDescription;
+import com.dennis.auth.web.AuthorizationConsentController.ScopeWithDescription;
+import java.sql.SQLException;
 import java.util.Arrays;
 
+import org.h2.tools.Server;
+import org.springframework.context.annotation.Bean;
 import org.thymeleaf.expression.Lists;
 
 import org.springframework.aot.hint.MemberCategory;
@@ -32,6 +35,11 @@ public class SpringAuthorizationServerApplication {
 			);
 		}
 
+	}
+
+	@Bean(initMethod = "start", destroyMethod = "stop")
+	public Server h2Server() throws SQLException {
+		return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
 	}
 
 	public static void main(String[] args) {

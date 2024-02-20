@@ -1,4 +1,4 @@
-package com.dennis.web;
+package com.dennis.auth.web;
 
 import java.security.Principal;
 import java.util.Collections;

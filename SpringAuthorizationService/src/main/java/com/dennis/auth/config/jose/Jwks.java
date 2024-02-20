@@ -1,4 +1,4 @@
-package com.dennis.jose;
+package com.dennis.auth.config.jose;
 
 import java.security.KeyPair;
 import java.security.interfaces.ECPrivateKey;

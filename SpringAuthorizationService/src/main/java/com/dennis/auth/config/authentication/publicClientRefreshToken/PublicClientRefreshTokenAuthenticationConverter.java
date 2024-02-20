@@ -1,4 +1,4 @@
-package com.dennis.authentication.refreshToken;
+package com.dennis.auth.config.authentication.publicClientRefreshToken;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,4 @@
-package com.dennis.federation;
+package com.dennis.auth.config.federation;
 
 // tag::imports[]
 import java.util.Map;

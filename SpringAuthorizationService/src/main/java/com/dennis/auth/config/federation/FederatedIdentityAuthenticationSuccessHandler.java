@@ -1,6 +1,5 @@
-package com.dennis.federation;
+package com.dennis.auth.config.federation;
 
-// tag::imports[]
 import java.io.IOException;
 import java.util.function.Consumer;
 
@@ -14,14 +13,12 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-// end::imports[]
 
 /**
  * An {@link AuthenticationSuccessHandler} for capturing the {@link OidcUser} or
  * {@link OAuth2User} for Federated Account Linking or JIT Account Provisioning.
  *
  */
-// tag::class[]
 public final class FederatedIdentityAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 	private final AuthenticationSuccessHandler delegate = new SavedRequestAwareAuthenticationSuccessHandler();
@@ -52,4 +49,3 @@ public final class FederatedIdentityAuthenticationSuccessHandler implements Auth
 	}
 
 }
-// end::class[]
