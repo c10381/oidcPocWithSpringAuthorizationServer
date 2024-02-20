@@ -1,5 +1,7 @@
 package com.dennis.auth.config;
 
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 import com.dennis.auth.config.federation.FederatedIdentityAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,6 +9,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
@@ -34,8 +37,10 @@ public class DefaultSecurityConfig {
 			.authorizeHttpRequests(authorize ->
 				authorize
 					.requestMatchers("/assets/**", "/login","/logout", "/oauth/authorize", "/userinfo").permitAll()
-					.anyRequest().authenticated()
+//						.requestMatchers(toH2Console()).permitAll()
+						.anyRequest().authenticated()
 			)
+//				.headers(headers -> headers.frameOptions(FrameOptionsConfig::disable))
 			.formLogin(formLogin ->
 				formLogin
 					.loginPage("/login")

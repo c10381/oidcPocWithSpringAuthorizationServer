@@ -33,13 +33,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -159,13 +154,13 @@ public class AuthorizationServerConfig {
 //
 //		return registeredClientRepository;
 //	}
-
+//
 //	@Bean
 //	public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
 //			RegisteredClientRepository registeredClientRepository) {
 //		return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
 //	}
-
+//
 //	@Bean
 //	public JdbcOAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
 //			RegisteredClientRepository registeredClientRepository) {
