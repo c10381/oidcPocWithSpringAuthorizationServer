@@ -18,10 +18,6 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Map;
 
 import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.ERROR_URI;
@@ -69,7 +65,7 @@ public class PublicClientRefreshTokenAuthenticationProvider implements Authentic
         this.logger.trace("Validated client authentication parameters");
 
         // Validate the "code_verifier" parameter for the public client
-        authenticateCodeVerifier(clientAuthentication, registeredClient);
+        authenticateParameters(clientAuthentication, registeredClient);
 
         this.logger.trace("Authenticated public client");
 
@@ -88,8 +84,8 @@ public class PublicClientRefreshTokenAuthenticationProvider implements Authentic
         return ClientAuthenticationMethod.NONE.equals(clientAuthentication.getClientAuthenticationMethod());
     }
 
-    private void authenticateCodeVerifier(OAuth2ClientAuthenticationToken clientAuthentication,
-                                          RegisteredClient registeredClient)
+    private void authenticateParameters(OAuth2ClientAuthenticationToken clientAuthentication,
+                                        RegisteredClient registeredClient)
     {
         Map<String, Object> parameters = clientAuthentication.getAdditionalParameters();
         if (!isSupportedAuthorizationGrantType(parameters)) {
@@ -116,40 +112,10 @@ public class PublicClientRefreshTokenAuthenticationProvider implements Authentic
                 this.logger.trace("Did not authenticate code verifier since requireProofKey=false");
             }
         }
-
-        this.logger.trace("Validated code verifier parameters");
-
-        String codeChallengeMethod = (String) authorizationRequest.getAdditionalParameters().get(PkceParameterNames.CODE_CHALLENGE_METHOD);
-        String codeVerifier = (String) parameters.get(PkceParameterNames.CODE_VERIFIER);
-        if (!codeVerifierValid(codeVerifier, codeChallenge, codeChallengeMethod)) {
-            this.logger.debug(LogMessage.format("Invalid request: code_verifier is missing or invalid for registered client '%s'",
-                    registeredClient.getId()));
-            throwInvalidParameter(PkceParameterNames.CODE_VERIFIER, OAuth2ErrorCodes.INVALID_GRANT, null);
-        }
-
-        this.logger.trace("Authenticated code verifier");
     }
 
     private static boolean isSupportedAuthorizationGrantType(Map<String, Object> parameters) {
         return AuthorizationGrantType.REFRESH_TOKEN.getValue().equals(parameters.get(OAuth2ParameterNames.GRANT_TYPE));
-    }
-
-    private boolean codeVerifierValid(String codeVerifier, String codeChallenge, String codeChallengeMethod) {
-        if (!StringUtils.hasText(codeVerifier)) {
-            return false;
-        } else if ("S256".equals(codeChallengeMethod)) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA-256");
-                byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
-                String encodedVerifier = Base64.getUrlEncoder().withoutPadding().encodeToString(digest);
-                return encodedVerifier.equals(codeChallenge);
-            } catch (NoSuchAlgorithmException ex) {
-                // It is unlikely that SHA-256 is not available on the server. If it is not available,
-                // there will likely be bigger issues as well. We default to SERVER_ERROR.
-                throw new OAuth2AuthenticationException(OAuth2ErrorCodes.SERVER_ERROR);
-            }
-        }
-        return false;
     }
 
     private static void throwInvalidParameter(String parameterName, String errorCode, String uri) {

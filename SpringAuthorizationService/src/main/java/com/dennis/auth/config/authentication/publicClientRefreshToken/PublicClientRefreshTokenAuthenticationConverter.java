@@ -7,7 +7,6 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.security.oauth2.core.endpoint.PkceParameterNames;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,11 +31,6 @@ public class PublicClientRefreshTokenAuthenticationConverter implements Authenti
         // client_id (REQUIRED for public clients)
         String clientId = parameters.getFirst(OAuth2ParameterNames.CLIENT_ID);
         if (!StringUtils.hasText(clientId) || parameters.get(OAuth2ParameterNames.CLIENT_ID).size() != 1) {
-            throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
-        }
-
-        // code_verifier (REQUIRED)
-        if (parameters.get(PkceParameterNames.CODE_VERIFIER).size() != 1) {
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
         }
 
