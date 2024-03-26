@@ -1,20 +1,19 @@
 package com.dennis;
 
-import com.dennis.auth.web.AuthorizationConsentController.ScopeWithDescription;
-import java.sql.SQLException;
-import java.util.Arrays;
-
+import com.dennis.auth.web.AuthorizationConsentController;
 import org.h2.tools.Server;
-import org.springframework.context.annotation.Bean;
-import org.thymeleaf.expression.Lists;
-
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeReference;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportRuntimeHints;
+import org.thymeleaf.expression.Lists;
+
+import java.sql.SQLException;
+import java.util.Arrays;
 
 @SpringBootApplication
 @ImportRuntimeHints(SpringAuthorizationServerApplication.DemoAuthorizationServerApplicationRuntimeHintsRegistrar.class)
@@ -27,7 +26,7 @@ public class SpringAuthorizationServerApplication {
 			// Thymeleaf
 			hints.reflection().registerTypes(
 					Arrays.asList(
-							TypeReference.of(ScopeWithDescription.class),
+							TypeReference.of(AuthorizationConsentController.ScopeWithDescription.class),
 							TypeReference.of(Lists.class)
 					), builder ->
 							builder.withMembers(MemberCategory.DECLARED_FIELDS,
