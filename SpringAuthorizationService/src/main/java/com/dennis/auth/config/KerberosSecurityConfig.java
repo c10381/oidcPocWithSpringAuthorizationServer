@@ -6,6 +6,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.kerberos.authentication.KerberosAuthenticationProvider;
@@ -13,7 +14,6 @@ import org.springframework.security.kerberos.authentication.KerberosServiceAuthe
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosClient;
 import org.springframework.security.kerberos.authentication.sun.SunJaasKerberosTicketValidator;
 import org.springframework.security.kerberos.web.authentication.SpnegoAuthenticationProcessingFilter;
-import org.springframework.security.kerberos.web.authentication.SpnegoEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -27,9 +27,12 @@ public class KerberosSecurityConfig {
         KerberosServiceAuthenticationProvider kerberosServiceAuthenticationProvider = kerberosServiceAuthenticationProvider();
         ProviderManager providerManager = new ProviderManager(kerberosAuthenticationProvider,
                 kerberosServiceAuthenticationProvider);
-        http.exceptionHandling(exceptionHandler -> exceptionHandler.authenticationEntryPoint(new SpnegoEntryPoint("/login")))
+        http.cors(Customizer.withDefaults())
+                // removes windows pop up
+//                .exceptionHandling(exceptionHandler -> exceptionHandler.authenticationEntryPoint(new SpnegoEntryPoint("/login")))
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/assets/**", "/login","/logout", "/oauth/authorize", "/userinfo").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("http://oidc-ui:4200/*"))
                 .logout(LogoutConfigurer::permitAll)
@@ -51,6 +54,7 @@ public class KerberosSecurityConfig {
     public KerberosAuthenticationProvider kerberosAuthenticationProvider() {
         KerberosAuthenticationProvider provider = new KerberosAuthenticationProvider();
         SunJaasKerberosClient client = new SunJaasKerberosClient();
+        client.setMultiTier(true);
         provider.setKerberosClient(client);
         provider.setUserDetailsService(dummyUserDetailsService());
         return provider;
@@ -67,13 +71,13 @@ public class KerberosSecurityConfig {
     @Bean
     public SunJaasKerberosTicketValidator sunJaasKerberosTicketValidator() {
         SunJaasKerberosTicketValidator ticketValidator = new SunJaasKerberosTicketValidator();
-        ticketValidator.setServicePrincipal("HTTP/neo.example.org@EXAMPLE.COM");
-        FileSystemResource fs = new FileSystemResource("D:/Project-workspace/oidcPocWithSpringAuthorizationServer/SpringAuthorizationService/src/main/resources/neo.keytab");
+        ticketValidator.setServicePrincipal("HTTP/oidc-ui@EXAMPLE.COM");
+        FileSystemResource fs = new FileSystemResource("C:/Users/Dennis/IdeaProjects/oidcPocWithSpringAuthorizationServer/SpringAuthorizationService/src/main/resources/oidc.keytab");
         ticketValidator.setKeyTabLocation(fs);
         ticketValidator.setDebug(true);
         ticketValidator.setRefreshKrb5Config(true);
-//        ticketValidator.setMultiTier(true);
-        System.out.println(fs.exists());
+        // test if it reads the file
+//        System.out.println(fs.exists());
         return ticketValidator;
     }
 

@@ -1,24 +1,19 @@
 package com.dennis.auth.service;
 
+import com.dennis.auth.config.jackson.KerberosUsernamePasswordAuthenticationTokenMixin;
 import com.dennis.auth.model.Authorization;
 import com.dennis.auth.repository.AuthorizationRepository;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.json.JsonWriteFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2DeviceCode;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-import org.springframework.security.oauth2.core.OAuth2Token;
-import org.springframework.security.oauth2.core.OAuth2UserCode;
+import org.springframework.security.kerberos.authentication.KerberosUsernamePasswordAuthenticationToken;
+import org.springframework.security.oauth2.core.*;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
@@ -33,11 +28,25 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 @Component
 public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService {
   private final AuthorizationRepository authorizationRepository;
   private final RegisteredClientRepository registeredClientRepository;
-  private final ObjectMapper objectMapper = new ObjectMapper();
+
+  private final JsonFactory jsonFactory = JsonFactory.builder()
+          .enable(JsonWriteFeature.ESCAPE_NON_ASCII)
+          .build();
+
+  private final ObjectMapper objectMapper = JsonMapper.builder(jsonFactory)
+          .build()
+          .configure(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS, false)
+          .addMixIn(KerberosUsernamePasswordAuthenticationToken.class, KerberosUsernamePasswordAuthenticationTokenMixin.class);
 
   public JpaOAuth2AuthorizationService(AuthorizationRepository authorizationRepository, RegisteredClientRepository registeredClientRepository) {
     Assert.notNull(authorizationRepository, "authorizationRepository cannot be null");
@@ -264,7 +273,7 @@ public class JpaOAuth2AuthorizationService implements OAuth2AuthorizationService
 
   private Map<String, Object> parseMap(String data) {
     try {
-      return this.objectMapper.readValue(data, new TypeReference<Map<String, Object>>() {
+      return this.objectMapper.readValue(data, new TypeReference<>() {
       });
     } catch (Exception ex) {
       throw new IllegalArgumentException(ex.getMessage(), ex);
